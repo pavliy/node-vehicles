@@ -18,7 +18,7 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 
 ## Tech debt
 
-- API E2E tests coverage should be extended. Errors/success, caching - those things should be automated for sure
+- API E2E tests coverage should be extended. Errors/success, pipeline cases - those things should be automated for sure
 - Validation if vehicle exists or not - can be checked earlier using validators. And the same db repository can be then used inside service
 - Cache is now in-memory. For production - I'd for sure go with REDIS or similar for production. Here it's easy to switch
 - Ideally tracing metrics should be in place. I usually push to DataDog or ELK
@@ -29,6 +29,7 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 - Load tests should be added. I'd go with k6.io. It allows to run those tests using servers from github/gitlab etc
 - For now it's public API, but sort of OAuth JWT based setup can be easily added here as well
 - UML schema with overall design should be added
+- In 2 places - process.env is used directly instead of config service. Should be corrected and aligned
 
 ## Thoughts & Notes
 
@@ -44,6 +45,7 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 - In health check - I've added DB connection for sample. But it's a matter to argue - health endpoint is usually checked by K8S to see if node is fine. And team should be really careful with this - cause if wrong status is returned - cluster will restart app. But if there are issues with SQL server itself - that's not something really helpful, right?
 - Epoch date is used. In REST world usually it's ISO formatted, though. But I don't know about the consumer of this API - it's other server - epoch might be better. For people - ISO is good
 - E2E testing will be simpler in nest once they will merge replace module thing. Until then - have to check mode in dynamicmodule
+- In tests where vehicle is created - tsignore is used. More often it's ok to have separate constructor for better usability. Just don't want to confuse domain layer here. In .NET it's easy to have internal constructor which is shared then only with tests assembly
 
 ## Getting Started
 
