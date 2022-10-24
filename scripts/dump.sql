@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS "stateLogs" (
   "state" TEXT NOT NULL,
   "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL,
 
-  FOREIGN KEY (vehicleId) REFERENCES Vehicles(id)
+  FOREIGN KEY ("vehicleId") REFERENCES vehicles("id")
 );
 
 INSERT INTO "stateLogs" ("vehicleId", state, timestamp) VALUES (1, 'quoted',  '2022-09-10 10:23:54+00');

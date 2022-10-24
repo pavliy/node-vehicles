@@ -1,5 +1,9 @@
 /* eslint-disable immutable/no-let */
 /* eslint-disable import/no-extraneous-dependencies */
+
+// eslint-disable-next-line
+require('dotenv').config({ path: '.e2e.env' });
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
@@ -22,7 +26,7 @@ describe('VehiclesController (e2e) tests', () => {
         TypeOrmModule.forRoot({
           database: ':memory:',
           entities: [Vehicle, StateLog],
-          logging: true,
+          logging: false,
           synchronize: true,
           type: 'sqlite',
         }),

@@ -14,7 +14,7 @@ import { SwaggerDocsModule } from './infrastructure/swagger-docs/swagger-docs.mo
     LoggingModule,
     VehiclesModule,
     CachingModule,
-    PersistenceModule,
+    PersistenceModule.register(),
     ConfigurationModule,
     MappingModule,
     HealthModule,

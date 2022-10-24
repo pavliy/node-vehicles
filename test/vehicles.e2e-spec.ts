@@ -1,16 +1,23 @@
+/* eslint-disable @typescript-eslint/dot-notation */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable dot-notation */
+/* eslint-disable functional/immutable-data */
 /* eslint-disable immutable/no-let */
 /* eslint-disable import/no-extraneous-dependencies */
+
+// eslint-disable-next-line
+require('dotenv').config({ path: '.e2e.env' });
+
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, VersioningType } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from '../src/app.module';
-import { VehiclesModule } from '../src/vehicles/vehicles.module';
 import { Vehicle } from '../src/vehicles/model/vehicle.entity';
 import { StateLog } from '../src/vehicles/model/state-log.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-describe.skip('VehiclesController (e2e) tests', () => {
+describe('VehiclesController (e2e) tests', () => {
   let app: INestApplication;
   let vehiclesRepository: Repository<Vehicle>;
 
@@ -18,17 +25,21 @@ describe.skip('VehiclesController (e2e) tests', () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [
         AppModule,
-        VehiclesModule,
         TypeOrmModule.forRoot({
           database: ':memory:',
           entities: [Vehicle, StateLog],
-          logging: true,
+          logging: false,
           synchronize: true,
           type: 'sqlite',
-        })],
+        }),
+      ],
     }).compile();
 
     app = moduleFixture.createNestApplication();
+    app.enableVersioning({
+      defaultVersion: '1',
+      type: VersioningType.URI,
+    });
     vehiclesRepository = moduleFixture.get('VehicleRepository');
     await app.init();
   });
@@ -42,10 +53,26 @@ describe.skip('VehiclesController (e2e) tests', () => {
   });
 
   it('/v1/vehicles/1 (GET)', async () => {
-    await vehiclesRepository.insert({ id: 1, make: 'Mazda', model: 'Cosmo', state: 'sold' });
+    const testVehicle = new Vehicle();
 
-    return request(app.getHttpServer())
-      .get('/v1/vehicles/1')
-      .expect(200);
+    /* @ts-ignore */
+    testVehicle['stateInternal'] = 'sold';
+    /* @ts-ignore */
+    testVehicle['make'] = 'Mazda';
+    /* @ts-ignore */
+    testVehicle['model'] = 'Cosmo';
+    /* @ts-ignore */
+    testVehicle['id'] = 1;
+
+    await vehiclesRepository.insert(testVehicle);
+
+    const response = await request(app.getHttpServer()).get('/v1/vehicles/1').expect(200);
+
+    expect(response.body).toEqual({
+      id: 1,
+      make: testVehicle.make,
+      model: testVehicle.model,
+      state: testVehicle.state,
+    });
   });
 });
