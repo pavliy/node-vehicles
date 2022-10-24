@@ -21,7 +21,7 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 - API E2E tests coverage should be extended. Errors/success, pipeline cases - those things should be automated for sure
 - Validation if vehicle exists or not - can be checked earlier using validators. And the same db repository can be then used inside service
 - Cache is now in-memory. For production - I'd for sure go with REDIS or similar for production. Here it's easy to switch
-- Ideally tracing metrics should be in place. I usually push to DataDog or ELK
+- Requests tracing & metrics should be in place. I usually push to DataDog or ELK
 - Ci/CD. Build and test on each MR. It's also nice to have temp deployment before merging in to check all stuff as well.  
   I usually work with Jenkins/Gitlab CI/Azure DevOPS
 - Logging targets. Depending on infra - usually that's agent based logging. So we can write to file for instance and agent will capture it. In .NET it's possible to avoid file and write directly into std_out
