@@ -11,8 +11,8 @@ import { VehicleDto } from '../../dto/vehicle.dto';
 export class VehiclesService {
   public constructor(
     @InjectRepository(Vehicle) private readonly vehiclesRepository: Repository<Vehicle>,
-    @InjectMapper() private readonly mapper: Mapper) {
-  }
+    @InjectMapper() private readonly mapper: Mapper,
+  ) {}
 
   public async getVehicle(id: number, timestamp?: Date): Promise<VehicleDto> {
     const foundVehicle = await this.vehiclesRepository.findOne({ relations: ['stateLogs'], where: { id } });

@@ -21,7 +21,6 @@ export class Vehicle {
   public readonly model: string;
 
   @OneToMany(() => StateLog, (stateLog) => stateLog.vehicle)
-  @JoinColumn({ referencedColumnName: 'vehicleId' })
   public readonly stateLogs?: readonly StateLog[];
 
   @AutoMap()

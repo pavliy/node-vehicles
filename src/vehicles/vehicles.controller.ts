@@ -13,7 +13,7 @@ export class VehiclesController {
   @UseInterceptors(CacheInterceptor)
   public async getByIdWithTimestamp(@Param('id', ParseIntPipe) id: number,
     @Query() query: VehicleQuery): Promise<VehicleDto> {
-    const foundVehicle = await this.vehiclesService.getVehicle(id, query.stateTimeStamp);
+    const foundVehicle = await this.vehiclesService.getVehicle(id, query.stateTimestamp);
 
     return foundVehicle;
   }

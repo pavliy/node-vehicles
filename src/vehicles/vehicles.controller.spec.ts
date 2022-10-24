@@ -16,11 +16,14 @@ describe('VehiclesController tests', () => {
     });
     const module: TestingModule = await Test.createTestingModule({
       controllers: [VehiclesController],
-      providers: [{
-        provide: VehiclesService,
-        useClass: vehiclesService,
-      }],
-    }).overrideInterceptor(CacheInterceptor)
+      providers: [
+        {
+          provide: VehiclesService,
+          useClass: vehiclesService,
+        },
+      ],
+    })
+      .overrideInterceptor(CacheInterceptor)
       .useClass(jest.fn())
       .compile();
 
@@ -40,7 +43,7 @@ describe('VehiclesController tests', () => {
     })() as unknown as Vehicle;
 
     getVehicleMock.mockResolvedValue(fakeVehicle);
-    const foundVehicle = await controller.getByIdWithTimestamp(1, { stateTimeStamp: undefined });
+    const foundVehicle = await controller.getByIdWithTimestamp(1, { stateTimestamp: undefined });
 
     expect(foundVehicle).toBe(fakeVehicle);
   });

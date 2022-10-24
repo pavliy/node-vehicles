@@ -1,4 +1,3 @@
-
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional } from 'class-validator';
@@ -9,5 +8,5 @@ export class VehicleQuery {
   @IsOptional()
   @IsEpochDate()
   @Type(() => Number)
-  public readonly stateTimeStamp: Date | undefined;
+  public readonly stateTimestamp: Date | undefined;
 }

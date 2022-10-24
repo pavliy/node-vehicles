@@ -19,7 +19,6 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 ## Tech debt
 
 - API E2E tests coverage should be extended. I'd for sure check things like: full lifecycle of request, errors/success, caching - those things should be automated for sure
-- Database tuning. StateLogs table has no foreign key relation or index related to vehicle table. Should be added for better performance
 - Validation if vehicle exists or not - can be checked earlier using validators. And the same db repository can be then used inside service
 - Cache is now in-memory. For production - I'd for sure go with REDIS or similar for production. Here it's easy to switch
 - Ideally tracing metrics should be in place. I usually push to DataDog or ELK
@@ -29,11 +28,13 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 - Database retries. I'd definitely get back to it. In .NET world Polly is a life saver to implement retries. But not sure about typeorm ecosystem - need to check more what it has
 - Load tests should be added. I'd go with k6.io. It allows to run those tests using servers from github/gitlab etc
 - For now it's public API, but sort of OAuth JWT based setup can be easily added here as well
-- I usually make prettier and editor config to auto format some stuff on save. But something is not working now - need to check and fix
 - UML schema with overall design should be added
 
 ## Thoughts & Notes
 
+- Foreign key was added for statelog and vehicle relation - to improve performance. StateLog might also desire to have it's own ID of composite ID, but not a must here.  
+  NOTE: it was added directly in SQL script, though migration could be written
+- In terms of IDs - integer here is not the best way to go. That could be SERIAL for internal ID and GUID for external ID - in this case less chances to be 'hacked' by consumers
 - Architecture and structure - is always specific to goals and targets and a matter to discuss/think. In .NET OOP world I really like Onion architecture, DDD and series of related patterns - where domain is center of application. For this specific sample - it makes no sense. But for complex project(s) - I'd revisit that. Though, JS world is different in that terms - modules are very attractive to make some things easy, but forget about some concerns separation
 - In vehicles module - I've pushed `VehicleNotFoundException`, which inherits regular `HttpException`. For simplicity - I like this. However usually it should domain/service exceptions are more abstracted. And it might be a good idea in some projects to map domain error into http error inside exception filter
 - Assuming that states # for car is not huge - I made decision to load them all as relation and filter needed state there. It's possible to filter at SQL side. But for simplicity I followed first path here. This also allows to test this logic quickly and easy. When it's SQL - requires more setup and boilerplate
@@ -41,6 +42,7 @@ This is demo project implemented with nodejs. Allows to work with vehicles and r
 - Dev environment can be also adjusted to work without installation of nodejs/nvc - just using docker. But requires some more time and resources
 - API is versioned. But concept is just for sample. It really depends on needs of client and company strategy
 - In health check - I've added DB connection for sample. But it's a matter to argue - health endpoint is usually checked by K8S to see if node is fine. And team should be really careful with this - cause if wrong status is returned - cluster will restart app. But if there are issues with SQL server itself - that's not something really helpful, right?
+- Epoch date is used. In REST world usually it's ISO formatted, though. But I don't know about the consumer of this API - it's other server - epoch might be better. For people - ISO is good
 
 ## Getting Started
 
@@ -50,6 +52,10 @@ Before you start, make sure you have docker installed
 
 1. `docker-compose up`
 2. Navigate to: [http://localhost:3000/api](http://localhost:3000/api)
+3. Sample without timestamp: `http://localhost:3000/v1/vehicles/3`
+4. Sample with timestamp: `http://localhost:3000/v1/vehicles/3?stateTimestamp=1662927367000`
+
+NOTE: I could add scratch or postman stuff, but that's an overhead here
 
 ### For development
 

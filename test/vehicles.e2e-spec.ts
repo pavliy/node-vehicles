@@ -34,7 +34,7 @@ describe.skip('VehiclesController (e2e) tests', () => {
   });
 
   afterAll(async () => {
-    await app.close();
+    await app?.close();
   });
 
   afterEach(async () => {

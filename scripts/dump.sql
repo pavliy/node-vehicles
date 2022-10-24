@@ -17,7 +17,9 @@ INSERT INTO "vehicles" (id, make, model, state) VALUES (3, 'VW',   'GOLF', 'sold
 CREATE TABLE IF NOT EXISTS "stateLogs" (
   "vehicleId"  INTEGER NOT NULL,
   "state" TEXT NOT NULL,
-  "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL
+  "timestamp" TIMESTAMP WITH TIME ZONE NOT NULL,
+
+  FOREIGN KEY (vehicleId) REFERENCES Vehicles(id)
 );
 
 INSERT INTO "stateLogs" ("vehicleId", state, timestamp) VALUES (1, 'quoted',  '2022-09-10 10:23:54+00');
