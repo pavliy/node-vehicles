@@ -1,0 +1,27 @@
+services:
+  api:
+    image: motorway-test-api
+    container_name: motorway-test-api
+    build:
+      context: .
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_HOST=db
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+  db:
+    image: motorway-test-db
+    container_name: motorway-test-db
+    build:
+      context: .
+      target: motorway-test-db
+      dockerfile: DbDockerFile
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=motorway
+    ports:
+      - 5432:5432
